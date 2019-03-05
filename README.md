@@ -1,1 +1,3 @@
-# rubiks-cube\n Osto Vargas and Sierra Obi
+# rubiks-cube
+# Implemented by
+# Osto Vargas and Sierra Obi
