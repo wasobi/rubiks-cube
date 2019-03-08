@@ -19,11 +19,11 @@ def shortest_path(start, end):
 	endParents = {}
 	endParents[end] = None        # End state has no parent
 
-	startFrontier = set()    # Current frontier in start BFS
-	endFrontier = set()      # Current frontier in end BFS
+	startFrontier = []       # Current frontier in start BFS
+	endFrontier = []         # Current frontier in end BFS
 
-	startFrontier.add(start) # Add start state as first and only node to generate next frontier
-	endFrontier.add(end)     # Add end state as first and only node to generate next frontier
+	startFrontier.append(start) # Add start state as first and only node to generate next frontier
+	endFrontier.append(end)     # Add end state as first and only node to generate next frontier
 
 	if end in startParents:
 		return []    # Start == End : No moves required
@@ -32,7 +32,7 @@ def shortest_path(start, end):
 	# Two-way BFS therefore requires 7 concurrent levels from both states
 	for i in range(7):
 
-		startNextFrontier = set()    # New empty set for new frontier to be discovered
+		startNextFrontier = []       # New empty set for new frontier to be discovered
 		for state in startFrontier:  # Iterate through each rubiks state in this frontier
 			for move in moves:       # Apply each move to this state
 				nextState = rubik.perm_apply(move, state)
@@ -42,15 +42,15 @@ def shortest_path(start, end):
 				# essentially trimming the Graph's leaves
 				if nextState not in startParents:
 					startParents[nextState] = (state, move)    # Store this state's parent + move
-					startNextFrontier.add(nextState)           # Create a node in the next frontier
+					startNextFrontier.append(nextState)        # Create a node in the next frontier
 				
-				# Intersect of both sets, Intermediate state of path found
+				# Intersect of both Graphs, Intermediate state of path found
 				if nextState in endParents:
 					return solution(startParents, endParents, nextState)
 
 		startFrontier = startNextFrontier    # Make the next frontier the current one
 
-		endNextFrontier = set()      # New empty set for new frontier to be discovered
+		endNextFrontier = []         # New empty set for new frontier to be discovered
 		for state in endFrontier:    # Iterate through each rubiks state in this frontier
 			for move in moves:       # Apply each move to this state
 				nextState = rubik.perm_apply(move, state)
@@ -60,9 +60,9 @@ def shortest_path(start, end):
 				# essentially trimming the Graph's leaves
 				if nextState not in endParents:
 					endParents[nextState] = (state, move)      # Store this state's parent + move
-					endNextFrontier.add(nextState)             # Create a node in the next frontier
+					endNextFrontier.append(nextState)          # Create a node in the next frontier
 				
-				# Intersect of both sets, Intermediate state of path found
+				# Intersect of both Graphs, Intermediate state of path found
 				if nextState in startParents:
 					return solution(startParents, endParents, nextState)
 
@@ -80,7 +80,7 @@ def solution(startParents, endParents, state):
 		parent = startParents[currentState]    # Parent state + move to current state
 		currentState = parent[0]               # Move one level towards initial state
 		move = parent[1]                       
-		moves.insert(0, move)              # Store moves in FILO (Start -> Intermediate)
+		moves.insert(0, move)                  # Store moves in FILO (Start -> Intermediate)
 	
 	currentState = state    # Return to intermediate state of rubiks cube
 	# Working way back down to end state
